@@ -1,0 +1,168 @@
+# Default values for upgrade-manager.
+
+image:
+  repository: public.ecr.aws/qonto/upgrade-manager
+  pullPolicy: IfNotPresent
+  tag: "" # Defined by chart appVersion parameter
+
+# Define environment variables
+env: {}
+envFrom: {}
+
+logLevel: info
+logFormat: json
+configFilePath: "/app/config/config.yaml"
+
+# Set additional labels on all resources
+additionalLabels: {}
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+volumeMounts: {}
+volumes: {}
+
+persistentVolumeClaim:
+  create: true
+  annotations: {}
+  name: ""
+  storage: "50Gi"
+  storageClassName: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  fsGroup: 10001
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsGroup: 10001
+  runAsUser: 10001
+
+service:
+  type: ClusterIP
+  port: 3000
+
+serviceMonitor:
+  enabled: true
+  interval: 60s
+  scrapeTimeout: 10s
+  additionalLabels: {}
+
+resources: {}
+  # limits:
+  #   memory: 1000Mi
+  # requests:
+  #   cpu: 200m
+  #   memory: 1000Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+config:
+  global:
+    interval: 10m
+    aws:
+      region: us-east-1
+  sources:
+    deployments:
+      - label-selector:
+          upgrade-manager.qonto.com/enabled: "true"
+        filters:
+          semver-versions:
+            remove-pre-release: true
+            remove-first-major-version: true
+
+        registries:
+          <private-registry-name>:
+            enable-date-retrieval: true
+            auth:
+              aws: true
+    argocdHelm:
+      - enabled: true
+        argocd-namespace: argocd # namespace where the argocd application object is deployed
+        git-credentials-secrets-namespace: argocd # namespace where secrets containing git credentials are deployed
+        git-credentials-secrets-pattern: ".*-repo-.*" # regex to filter which secrets to fetch
+        filters:
+          semver-versions:
+            remove-pre-release: true
+            remove-first-major-version: true
+          recent-versions:
+            days: 21 # number of days since the version was released
+          destination-namespace: # namespace where the app resources will be deployed
+            include: []
+            # ["kyverno"] # regular expression, if include is empty, it includes all namespaces
+            exclude: []
+            # ["default", "temporary-*", "feature-*", "kube-system"] # regular expression if exclude is empty, it does not exclude any namespace
+    filesystemHelm:
+      - enabled: true
+        paths:
+          - "./internal/app/_testdata/test_chart/Chart.yaml"
+          - "./internal/app/_testdata/test_chart2/Chart.yaml"
+          - "./internal/app/_testdata/test_chart3/Chart.yaml"
+          - "./internal/app/_testdata/test_chart4/Chart.yaml"
+        filters:
+          semver-versions:
+            remove-pre-release: true
+            remove-first-major-version: true
+          recent-versions:
+            days: 21
+    aws:
+      eks:
+        enabled: true
+        request-timeout: 15s
+      rds:
+        enabled: true
+        request-timeout: 15s
+        aggregation-level: cluster
+      msk:
+        enabled: true
+        request-timeout: 15s
+      elasticache:
+        enabled: true 
+        request-timeout: 15s
+      lambda:
+        enabled: true 
+        request-timeout: 15s
+        deprecated-runtimes-score: 100 # defaults to 100
+        deprecated-runtimes:
+          - "nodejs"
+          - "nodejs4.3"
+          - "nodejs4.3-edge"
+          - "nodejs6.10"
+          - "nodejs8.10"
+          - "nodejs10.x"
+          - "nodejs12.x"
+          - "java8"
+          - "java8.al2"
+          - "python2.7"
+          - "python3.6"
+          - "dotnetcore1.0"
+          - "dotnetcore2.0"
+          - "dotnet6"
+          - "ruby2.5"
+  http:
+    host: 0.0.0.0
+    port: 10000
+    write-timeout: 10
+    read-timeout: 10
+    read-header-timeout: 10
+

@@ -3,6 +3,7 @@ package deployments
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
 	"github.com/qonto/upgrade-manager/internal/infra/registry"
-	"go.uber.org/zap"
 )
 
 const (
@@ -25,7 +25,7 @@ type Source struct {
 	k8sClient             kubernetes.KubernetesClient
 	defaultRegistryClient *registry.Client
 	registryClients       map[string]*registry.Client
-	log                   *zap.Logger
+	log                   *slog.Logger
 	cfg                   Config
 	filter                filters.Filter
 }
@@ -35,7 +35,7 @@ func (s *Source) Name() string {
 	return "deployments"
 }
 
-func NewSource(log *zap.Logger, k8sClient kubernetes.KubernetesClient, cfg Config) (*Source, error) {
+func NewSource(log *slog.Logger, k8sClient kubernetes.KubernetesClient, cfg Config) (*Source, error) {
 	filter := filters.Build(cfg.Filters)
 	s := &Source{
 		log:       log,

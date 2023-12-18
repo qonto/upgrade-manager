@@ -1,11 +1,11 @@
 package calculators
 
 import (
+	"log/slog"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap"
 )
 
 func TestCandidateCountCalculateObsolescence(t *testing.T) {
@@ -31,7 +31,7 @@ func TestCandidateCountCalculateObsolescence(t *testing.T) {
 			expectedScore: 0 * DefaultPerCandidateScore,
 		},
 	}
-	calc := New(zap.NewExample(), software.CandidateCountCalculator, true)
+	calc := New(slog.Default(), software.CandidateCountCalculator, true)
 	for _, tc := range testCases {
 		t.Run(tc.description, func(t *testing.T) {
 			err := calc.CalculateObsolescenceScore(tc.soft)

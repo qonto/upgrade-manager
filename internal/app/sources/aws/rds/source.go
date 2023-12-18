@@ -3,18 +3,18 @@ package rds
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 )
 
 type Source struct {
 	api                     aws.RDSApi
-	log                     *zap.Logger
+	log                     *slog.Logger
 	cfg                     *Config
 	filter                  filters.Filter
 	engineToSoftTypeMapping map[string]software.SoftwareType
@@ -36,7 +36,7 @@ func (s *Source) Name() string {
 	return "RDS"
 }
 
-func NewSource(api aws.RDSApi, log *zap.Logger, cfg *Config) (*Source, error) {
+func NewSource(api aws.RDSApi, log *slog.Logger, cfg *Config) (*Source, error) {
 	mapping := map[string]software.SoftwareType{
 		"aurora-mysql":      RdsAuroraMySQL,
 		"aurora-postgresql": RdsAuroraPostgreSQL,

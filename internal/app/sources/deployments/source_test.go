@@ -1,13 +1,13 @@
 package deployments
 
 import (
+	"log/slog"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"go.uber.org/zap"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -47,7 +47,7 @@ func TestLoad(t *testing.T) {
 			},
 		},
 		nil)
-	source, err := NewSource(zap.NewExample(), k8sMock, Config{})
+	source, err := NewSource(slog.Default(), k8sMock, Config{})
 	assert.NoError(t, err)
 	softwares, err := source.Load()
 	assert.NoError(t, err)

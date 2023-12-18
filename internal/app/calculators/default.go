@@ -2,11 +2,11 @@ package calculators
 
 import (
 	"fmt"
+	"log/slog"
 
 	goversion "github.com/hashicorp/go-version"
 	soft "github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/semver"
-	"go.uber.org/zap"
 )
 
 const (
@@ -27,7 +27,7 @@ const (
 //
 // z patch versions late = z * 1
 type DefaultCalculator struct {
-	log               *zap.Logger
+	log               *slog.Logger
 	scoreTable        segmentScoreTable
 	checkDependencies bool
 }
@@ -39,7 +39,7 @@ type segmentScoreTable []int
 //
 // NOTE: Should DefaultCalculator be renamed to SemverCalculator
 // and MetaCalculator be renamed to DefaultCalculator?
-func New(logger *zap.Logger, t soft.CalculatorType, checkDependencies bool) soft.Calculator {
+func New(logger *slog.Logger, t soft.CalculatorType, checkDependencies bool) soft.Calculator {
 	switch t { //nolint
 	case soft.ReleaseDateCalculator:
 		return &ReleaseDateCalculator{

@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"context"
 	"fmt"
+	"log/slog"
 	"net/url"
 	"strings"
 	"time"
@@ -13,12 +14,11 @@ import (
 	soft "github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/repo"
 )
 
-func PopulateTopLevelSoftware(s3Api aws.S3Api, log *zap.Logger, topLevelSoftware *soft.Software, repoURL string, chartName string, filter filters.Filter) error {
+func PopulateTopLevelSoftware(s3Api aws.S3Api, log *slog.Logger, topLevelSoftware *soft.Software, repoURL string, chartName string, filter filters.Filter) error {
 	log.Debug(fmt.Sprintf("Populate top level software for chart %s repo backend %s", chartName, repoURL))
 	repoBackend, err := buildRepoBackend(repoURL, chartName, log, s3Api)
 	if err != nil {
@@ -34,7 +34,7 @@ func PopulateTopLevelSoftware(s3Api aws.S3Api, log *zap.Logger, topLevelSoftware
 	return nil
 }
 
-func PopulateSoftwareDependencies(s3Api aws.S3Api, log *zap.Logger, topLevelSoftware *soft.Software, chart *chart.Chart, st soft.SoftwareType, filter filters.Filter) error {
+func PopulateSoftwareDependencies(s3Api aws.S3Api, log *slog.Logger, topLevelSoftware *soft.Software, chart *chart.Chart, st soft.SoftwareType, filter filters.Filter) error {
 	softwareDependencies := []*soft.Software{}
 	for _, dependency := range chart.Metadata.Dependencies {
 		var depName string
@@ -71,7 +71,7 @@ func PopulateSoftwareDependencies(s3Api aws.S3Api, log *zap.Logger, topLevelSoft
 	return nil
 }
 
-func computeSoftwareVersions(repoBackend RepoBackend, chartName string, s *soft.Software, filter filters.Filter, log *zap.Logger) error {
+func computeSoftwareVersions(repoBackend RepoBackend, chartName string, s *soft.Software, filter filters.Filter, log *slog.Logger) error {
 	index, err := repoBackend.getIndexFile()
 	if err != nil {
 		return err

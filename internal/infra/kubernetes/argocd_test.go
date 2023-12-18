@@ -2,9 +2,9 @@ package kubernetes
 
 import (
 	"context"
+	"log/slog"
 	"testing"
 
-	"go.uber.org/zap"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/dynamic/fake"
@@ -100,7 +100,7 @@ func TestRawToArgoApplication(t *testing.T) {
 }
 
 func TestListArgoApplications(t *testing.T) {
-	log := zap.NewExample()
+	log := slog.Default()
 	testCases := []map[string]any{
 		{
 			"kind":       "Application",

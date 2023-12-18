@@ -2,12 +2,12 @@ package filesystemhelm
 
 import (
 	"fmt"
+	"log/slog"
 
 	soft "github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/app/sources/helm/versions"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 	"helm.sh/helm/v3/pkg/chart"
 )
 
@@ -15,13 +15,13 @@ const FileSystemHelm soft.SoftwareType = "filesystemHelm"
 
 type Source struct {
 	Charts []chart.Chart
-	log    *zap.Logger
+	log    *slog.Logger
 	cfg    Config
 	s3Api  aws.S3Api
 	filter filters.Filter
 }
 
-func NewSource(cfg Config, log *zap.Logger, s3Api aws.S3Api) (*Source, error) {
+func NewSource(cfg Config, log *slog.Logger, s3Api aws.S3Api) (*Source, error) {
 	if cfg.Filters.SemverVersions == nil {
 		cfg.Filters.SemverVersions = &filters.SemverVersionsConfig{}
 	}

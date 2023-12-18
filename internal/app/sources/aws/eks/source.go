@@ -3,6 +3,7 @@ package eks
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/eks"
@@ -10,11 +11,10 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/app/semver"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 )
 
 type Source struct {
-	log    *zap.Logger
+	log    *slog.Logger
 	api    aws.EKSApi
 	cfg    *Config
 	filter filters.Filter
@@ -31,7 +31,7 @@ func (s *Source) Name() string {
 	return "EKS"
 }
 
-func NewSource(api aws.EKSApi, log *zap.Logger, cfg *Config) (*Source, error) {
+func NewSource(api aws.EKSApi, log *slog.Logger, cfg *Config) (*Source, error) {
 	// Current implementation of filters requires this map to be non-nil to filter old versions
 	// so we set RemovePreRelease to true to filter out old versions anyway.
 	// NOTE: this is slightly confusing and should probably be refactored later on

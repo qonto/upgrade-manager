@@ -3,10 +3,10 @@ package kubernetes
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"path/filepath"
 
-	"go.uber.org/zap"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/dynamic"
@@ -19,7 +19,7 @@ import (
 type Client struct {
 	dynamicClient    dynamic.Interface
 	kubernetesClient kubernetes.Interface
-	logger           *zap.Logger
+	logger           *slog.Logger
 }
 
 type KubernetesClient interface {
@@ -28,7 +28,7 @@ type KubernetesClient interface {
 	ListDeployments(ctx context.Context, request ListRequest) (*appsv1.DeploymentList, error)
 }
 
-func NewClient(logger *zap.Logger) (*Client, error) {
+func NewClient(logger *slog.Logger) (*Client, error) {
 	var config *rest.Config
 	var err error
 

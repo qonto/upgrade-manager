@@ -2,6 +2,7 @@ package eks
 
 import (
 	"fmt"
+	"log/slog"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -10,7 +11,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	awsInfra "github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 )
 
 func TestLoad(t *testing.T) {
@@ -104,7 +104,7 @@ func TestLoad(t *testing.T) {
 			},
 		},
 	)
-	src, err := NewSource(mockApi, zap.NewExample(), &Config{
+	src, err := NewSource(mockApi, slog.Default(), &Config{
 		Enabled: true,
 		Filters: filters.Config{
 			SemverVersions: &filters.SemverVersionsConfig{

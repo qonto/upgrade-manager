@@ -1,11 +1,11 @@
 package elasticache
 
 import (
+	"log/slog"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 )
 
 func TestSourceLoad(t *testing.T) {
@@ -28,7 +28,7 @@ func TestSourceLoad(t *testing.T) {
 		},
 	}
 	for idx, tc := range testCases {
-		source, err := NewSource(mockApi, zap.NewExample(), tc.cfg)
+		source, err := NewSource(mockApi, slog.Default(), tc.cfg)
 		if err != nil {
 			t.Error(err)
 		}

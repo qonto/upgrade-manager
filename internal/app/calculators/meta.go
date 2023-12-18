@@ -1,14 +1,15 @@
 package calculators
 
 import (
+	"log/slog"
+
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
-	"go.uber.org/zap"
 )
 
 var calculatorCache = make(map[software.CalculatorType]software.Calculator)
 
 type MetaCalculator struct {
-	log               *zap.Logger
+	log               *slog.Logger
 	checkDependencies bool
 }
 

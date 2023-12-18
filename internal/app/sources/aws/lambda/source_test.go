@@ -2,6 +2,7 @@ package lambda
 
 import (
 	"errors"
+	"log/slog"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
@@ -11,7 +12,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"go.uber.org/zap"
 )
 
 func TestLoad(t *testing.T) {
@@ -107,7 +107,7 @@ func TestLoad(t *testing.T) {
 				testCases[i].BuildMock = defaultBuildMock
 			}
 			testCases[i].BuildMock(mockApi)
-			source, err := NewSource(mockApi, zap.NewExample(), testCases[i].Config)
+			source, err := NewSource(mockApi, slog.Default(), testCases[i].Config)
 
 			assert.NoError(t, err)
 			softwares, err := source.Load()

@@ -1,15 +1,15 @@
 package argohelm
 
 import (
+	"log/slog"
 	"testing"
 
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/qonto/upgrade-manager/internal/app/sources/utils/gitutils"
-	"go.uber.org/zap"
 )
 
 func TestMatchGitRepoConnection(t *testing.T) {
-	s := Source{log: zap.NewExample()}
+	s := Source{log: slog.Default()}
 	s.gitRepoConnections = []*gitutils.RepoConnection{
 		{
 			Url: "https://github.foo.com/devops/kubernetes-resources/exactmatch.git",

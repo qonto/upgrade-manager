@@ -3,6 +3,7 @@ package http
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"sync"
@@ -11,7 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"go.uber.org/zap"
 )
 
 type Config struct {
@@ -25,7 +25,7 @@ type Config struct {
 type HTTPServer struct {
 	server *http.Server
 	Engine *gin.Engine
-	logger *zap.Logger
+	logger *slog.Logger
 
 	wg               sync.WaitGroup
 	registry         *prometheus.Registry
@@ -37,7 +37,7 @@ func healthz(context *gin.Context) {
 	context.JSON(200, "ok")
 }
 
-func New(registry *prometheus.Registry, logger *zap.Logger, config Config) (*HTTPServer, error) {
+func New(registry *prometheus.Registry, logger *slog.Logger, config Config) (*HTTPServer, error) {
 	var defaultTimeout int = 10
 	engine := gin.New()
 	address := fmt.Sprintf("%s:%d", config.Host, config.Port)

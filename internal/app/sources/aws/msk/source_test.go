@@ -1,6 +1,7 @@
 package msk
 
 import (
+	"log/slog"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/kafka"
@@ -8,7 +9,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/sources/utils"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/stretchr/testify/mock"
-	"go.uber.org/zap"
 )
 
 func TestLoad(t *testing.T) {
@@ -38,7 +38,7 @@ func TestLoad(t *testing.T) {
 				},
 			},
 		})
-	source, err := NewSource(api, zap.NewExample(), &Config{})
+	source, err := NewSource(api, slog.Default(), &Config{})
 	if err != nil {
 		t.Error(err)
 	}

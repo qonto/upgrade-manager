@@ -10,6 +10,8 @@ import (
 var (
 	debug          bool
 	configFilePath string
+	logLevel string
+	logFormat string
 )
 
 func InitAndRunCommand() error {
@@ -28,7 +30,8 @@ func InitAndRunCommand() error {
 		},
 	}
 	rootCmd.AddCommand(startCmd)
-	startCmd.PersistentFlags().BoolVar(&debug, "debug", false, "set log-level to debug")
 	startCmd.PersistentFlags().StringVar(&configFilePath, "config-file", "config/config.yml", "set log-level to debug")
+	rootCmd.PersistentFlags().StringVarP(&logLevel, "log-level", "v", "info", "Logger log level (debug, info, warn, error)")
+	rootCmd.PersistentFlags().StringVar(&logFormat, "log-format", "text", "Logger logs format (text, json)")
 	return rootCmd.Execute()
 }

@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/url"
 	"regexp"
 	"time"
 
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 	"helm.sh/helm/v3/pkg/cli"
 	"helm.sh/helm/v3/pkg/getter"
 	"helm.sh/helm/v3/pkg/repo"
@@ -70,7 +70,7 @@ func getRepoBackendType(repoUrl string) (RepoBackendType, error) {
 	return "", fmt.Errorf("could not determine RepoBackendType for url %s", repoUrl)
 }
 
-func buildRepoBackend(repoURL string, chartName string, log *zap.Logger, s3Api aws.S3Api) (RepoBackend, error) {
+func buildRepoBackend(repoURL string, chartName string, log *slog.Logger, s3Api aws.S3Api) (RepoBackend, error) {
 	repoType, err := getRepoBackendType(repoURL)
 	if err != nil {
 		return nil, err

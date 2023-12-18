@@ -3,6 +3,7 @@ package argohelm
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"regexp"
 	"strconv"
@@ -17,7 +18,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/sources/utils/gitutils"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
-	"go.uber.org/zap"
 	"helm.sh/helm/v3/pkg/chart"
 )
 
@@ -25,7 +25,7 @@ const ArgoHelm soft.SoftwareType = "argoHelm"
 
 type Source struct {
 	k8sClient          kubernetes.KubernetesClient
-	log                *zap.Logger
+	log                *slog.Logger
 	gitRepoConnections []*gitutils.RepoConnection
 	cfg                Config
 	s3Api              aws.S3Api
@@ -33,7 +33,7 @@ type Source struct {
 }
 
 // Returns a new argohelm software source
-func NewSource(cfg Config, log *zap.Logger, k8sClient kubernetes.KubernetesClient, loadSecretFromNamespace bool, s3Api aws.S3Api) (*Source, error) {
+func NewSource(cfg Config, log *slog.Logger, k8sClient kubernetes.KubernetesClient, loadSecretFromNamespace bool, s3Api aws.S3Api) (*Source, error) {
 	if cfg.Filters.SemverVersions == nil {
 		cfg.Filters.SemverVersions = &filters.SemverVersionsConfig{}
 	}

@@ -1,11 +1,11 @@
 package calculators
 
 import (
+	"log/slog"
 	"testing"
 	"time"
 
 	s "github.com/qonto/upgrade-manager/internal/app/core/software"
-	"go.uber.org/zap"
 )
 
 func TestDateCalculateObsolescenceScore(t *testing.T) {
@@ -60,7 +60,7 @@ func TestDateCalculateObsolescenceScore(t *testing.T) {
 			expectedScore: 10,
 		},
 	}
-	calculator := New(zap.NewExample(), s.ReleaseDateCalculator, true)
+	calculator := New(slog.Default(), s.ReleaseDateCalculator, true)
 	for _, tc := range testCases {
 		err := calculator.CalculateObsolescenceScore(tc.software)
 		if err != nil {

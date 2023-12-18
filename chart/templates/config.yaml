@@ -1,0 +1,13 @@
+{{- if .Values.config -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "upgrade-manager.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels:
+    {{- include "upgrade-manager.labels" . | nindent 4 }}
+data:
+  config.yaml: |
+    {{- toYaml .Values.config | nindent 4 }}
+{{- end -}}

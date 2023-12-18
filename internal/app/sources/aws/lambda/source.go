@@ -2,17 +2,17 @@ package lambda
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 )
 
 type Source struct {
-	log *zap.Logger
+	log *slog.Logger
 	api aws.LambdaApi
 	cfg *Config
 }
@@ -27,7 +27,7 @@ func (s *Source) Name() string {
 	return "lambda"
 }
 
-func NewSource(api aws.LambdaApi, log *zap.Logger, cfg *Config) (*Source, error) {
+func NewSource(api aws.LambdaApi, log *slog.Logger, cfg *Config) (*Source, error) {
 	return &Source{
 		api: api,
 		log: log,
@@ -114,7 +114,7 @@ func (s *Source) Load() ([]*software.Software, error) {
 			soft.VersionCandidates[i], soft.VersionCandidates[j] = soft.VersionCandidates[j], soft.VersionCandidates[i]
 		}
 
-		s.log.Info("Tracking software", zap.String("software", soft.Name), zap.String("software_type", string(soft.Type)))
+		s.log.Info("Tracking software", slog.String("software", soft.Name), slog.String("software_type", string(soft.Type)))
 		softwares = append(softwares, soft)
 	}
 	return softwares, nil

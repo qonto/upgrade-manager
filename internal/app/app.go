@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 	"fmt"
+	"log/slog"
+	"os"
 	"sync"
 	"time"
 
@@ -27,11 +29,10 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/sources/filesystemhelm"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
-	"go.uber.org/zap"
 )
 
 type App struct {
-	log       *zap.Logger
+	log       *slog.Logger
 	sources   []soft.Source
 	softwares []*soft.Software
 	Config    config.Config
@@ -56,7 +57,7 @@ type appMetrics struct {
 	loopExecTime        prometheus.Gauge
 }
 
-func New(l *zap.Logger, registry *prometheus.Registry, k8sClient kubernetes.KubernetesClient, config config.Config) (*App, error) {
+func New(l *slog.Logger, registry *prometheus.Registry, k8sClient kubernetes.KubernetesClient, config config.Config) (*App, error) {
 	app := &App{
 		log:       l,
 		registry:  registry,
@@ -97,7 +98,8 @@ func (a *App) InitSources() error {
 		for _, item := range a.Config.Sources.FsHelm {
 			softSource, err := filesystemhelm.NewSource(item, a.log, a.s3Api)
 			if err != nil {
-				a.log.Fatal(fmt.Sprint(err))
+				a.log.Error(fmt.Sprint(err))
+				os.Exit(1)
 			}
 			a.sources = append(a.sources, softSource)
 		}
@@ -106,8 +108,8 @@ func (a *App) InitSources() error {
 		for _, item := range a.Config.Sources.ArgocdHelm {
 			softSource, err := argohelm.NewSource(item, a.log, a.k8sClient, true, a.s3Api)
 			if err != nil {
-				a.log.Fatal(fmt.Sprint(err))
-			}
+				a.log.Error(fmt.Sprint(err))
+				os.Exit(1)			}
 			a.sources = append(a.sources, softSource)
 		}
 	}
@@ -115,44 +117,44 @@ func (a *App) InitSources() error {
 		for _, item := range a.Config.Sources.Deployments {
 			softSource, err := deployments.NewSource(a.log, a.k8sClient, item)
 			if err != nil {
-				a.log.Fatal(fmt.Sprint(err))
-			}
+				a.log.Error(fmt.Sprint(err))
+				os.Exit(1)			}
 			a.sources = append(a.sources, softSource)
 		}
 	}
 	if a.Config.Sources.Aws.Elasticache.Enabled {
 		escSource, err := elasticacheSource.NewSource(a.escApi, a.log, &a.Config.Sources.Aws.Elasticache)
 		if err != nil {
-			a.log.Fatal(fmt.Sprint(err))
-		}
+			a.log.Error(fmt.Sprint(err))
+			os.Exit(1)		}
 		a.sources = append(a.sources, escSource)
 	}
 	if a.Config.Sources.Aws.Eks.Enabled {
 		eksSource, err := eksSource.NewSource(a.eksApi, a.log, &a.Config.Sources.Aws.Eks)
 		if err != nil {
-			a.log.Fatal(fmt.Sprint(err))
-		}
+			a.log.Error(fmt.Sprint(err))
+			os.Exit(1)		}
 		a.sources = append(a.sources, eksSource)
 	}
 	if a.Config.Sources.Aws.Msk.Enabled {
 		mskSource, err := mskSource.NewSource(a.mskApi, a.log, &a.Config.Sources.Aws.Msk)
 		if err != nil {
-			a.log.Fatal(fmt.Sprint(err))
-		}
+			a.log.Error(fmt.Sprint(err))
+			os.Exit(1)		}
 		a.sources = append(a.sources, mskSource)
 	}
 	if a.Config.Sources.Aws.Rds.Enabled {
 		rdsSource, err := rdsSource.NewSource(a.rdsApi, a.log, &a.Config.Sources.Aws.Rds)
 		if err != nil {
-			a.log.Fatal(fmt.Sprint(err))
-		}
+			a.log.Error(fmt.Sprint(err))
+			os.Exit(1)		}
 		a.sources = append(a.sources, rdsSource)
 	}
 	if a.Config.Sources.Aws.Lambda.Enabled {
 		lambdaSource, err := lambdaSource.NewSource(a.lambdaApi, a.log, &a.Config.Sources.Aws.Lambda)
 		if err != nil {
-			a.log.Fatal(fmt.Sprint(err))
-		}
+			a.log.Error(fmt.Sprint(err))
+			os.Exit(1)		}
 		a.sources = append(a.sources, lambdaSource)
 	}
 	return nil
@@ -222,7 +224,7 @@ func (a *App) InitPrometheusMetrics() error {
 func (a *App) Start() {
 	interval, err := time.ParseDuration(a.Config.Global.Interval)
 	if err != nil {
-		a.log.Error("Failed parsing time interval. Using a default interval of 1h", zap.Error(err))
+		a.log.Error(fmt.Sprintf("Failed parsing time interval. Using a default interval of 1h, %v", err))
 		interval = time.Hour
 	}
 	ticker := time.NewTicker(interval)
@@ -262,18 +264,18 @@ func (a *App) mainLoop() {
 	// Load here all apps as softwares
 	a.loadSoftwares()
 	a.metrics.successLoads.Add(float64(len(a.softwares)))
-	a.log.Sugar().Infof("Found %d software(s) in total", len(a.softwares))
+	a.log.Info(fmt.Sprintf("Found %d software(s) in total", len(a.softwares)))
 	a.metrics.foundSoftwares.Set(float64(len(a.softwares)))
 	// Process each software
 	for _, software := range a.softwares {
-		a.log.Debug("computing obsolescence score", zap.String("software", software.Name))
+		a.log.Debug("computing obsolescence score", slog.String("software", software.Name))
 		if err := a.scoreSoftware(software); err != nil {
-			a.log.Error("failed to compute obsolescence score", zap.String("software", software.Name), zap.String("software_type", string(software.Type)))
+			a.log.Error("failed to compute obsolescence score", slog.String("software", software.Name), slog.String("software_type", string(software.Type)))
 			a.metrics.processError.WithLabelValues(software.Name, string(software.Type), "1", software.Name, "compute score").Add(1)
 			continue
 		}
 		a.metrics.successComputeScore.Add(1)
-		a.log.Debug("obsolescence score computed", zap.String("software", software.Name), zap.String("software_type", string(software.Type)), zap.Int("score", software.CalculatedScore))
+		a.log.Debug("obsolescence score computed", slog.String("software", software.Name), slog.String("software_type", string(software.Type)), slog.Int("score", software.CalculatedScore))
 	}
 
 	// not in reset function because we want to wait as much as possible to avoid empty metrics
@@ -291,11 +293,11 @@ func (a *App) loadSoftwares() {
 	for _, source := range a.sources {
 		found, err := source.Load()
 		if err != nil {
-			a.log.Error("failed to load softwares", zap.Error(err), zap.String("source", source.Name()))
+			a.log.Error(fmt.Sprintf("failed to load softwares %v", err), slog.String("source", source.Name()))
 			a.metrics.processError.WithLabelValues("", "", "", "", "load software").Add(1)
 		}
 		a.softwares = append(a.softwares, found...)
-		a.log.Info(fmt.Sprintf("Found %d software(s)", len(found)), zap.String("source", source.Name()))
+		a.log.Info(fmt.Sprintf("Found %d software(s)", len(found)), slog.String("source", source.Name()))
 	}
 }
 
@@ -319,13 +321,13 @@ func (a *App) report() {
 		if software.CalculatedScore > 0 {
 			if len(software.VersionCandidates) > 0 {
 				a.metrics.scores.WithLabelValues(software.Name, string(software.Type), software.Version.Version, software.VersionCandidates[0].Version, "1", software.Name, "update").Set(float64(software.CalculatedScore))
-				a.log.Debug("--> update: ", zap.String("software", software.Name), zap.String("software_type", string(software.Type)), zap.String("parent", "self"), zap.String("version", software.Version.Version), zap.String("target_version", software.VersionCandidates[0].Version))
+				a.log.Debug("--> update: ", slog.String("software", software.Name), slog.String("software_type", string(software.Type)), slog.String("parent", "self"), slog.String("version", software.Version.Version), slog.String("target_version", software.VersionCandidates[0].Version))
 			} else {
 				for i, dep := range software.Dependencies {
 					if len(dep.VersionCandidates) > 0 {
 						a.metrics.scores.WithLabelValues(software.Name, string(software.Type), software.Version.Version, "", "1", software.Name, "update_dependencies").Set(float64(software.CalculatedScore))
 						a.metrics.scores.WithLabelValues(dep.Name, string(dep.Type), dep.Version.Version, dep.VersionCandidates[0].Version, "0", software.Name, "update").Set(float64(dep.CalculatedScore))
-						a.log.Debug(fmt.Sprintf("--> update %d: ", i+1), zap.String("software", dep.Name), zap.String("software_type", string(dep.Type)), zap.String("parent", software.Name), zap.String("version", dep.Version.Version), zap.String("target_version", dep.VersionCandidates[0].Version))
+						a.log.Debug(fmt.Sprintf("--> update %d: ", i+1), slog.String("software", dep.Name), slog.String("software_type", string(dep.Type)), slog.String("parent", software.Name), slog.String("version", dep.Version.Version), slog.String("target_version", dep.VersionCandidates[0].Version))
 					}
 				}
 			}

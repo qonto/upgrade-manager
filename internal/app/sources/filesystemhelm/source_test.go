@@ -2,12 +2,12 @@ package filesystemhelm
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/stretchr/testify/mock"
-	"go.uber.org/zap"
 )
 
 func TestLoadSoftware(t *testing.T) {
@@ -31,7 +31,7 @@ func TestLoadSoftware(t *testing.T) {
 	s3mock := new(aws.S3Mock)
 	s3mock.On("GetObject", mock.Anything).Return(indexFile, nil)
 
-	s, err := NewSource(cfg, zap.NewExample(), s3mock)
+	s, err := NewSource(cfg, slog.Default(), s3mock)
 	if err != nil {
 		t.Fatalf("Error with NewSource(): %s", err)
 	}

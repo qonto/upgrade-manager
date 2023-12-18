@@ -2,6 +2,7 @@ package elasticache
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/elasticache"
@@ -9,15 +10,14 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 )
 
 type VersionProvider struct {
 	api aws.ElasticacheApi
-	log *zap.Logger
+	log *slog.Logger
 }
 
-func NewProvider(log *zap.Logger, api aws.ElasticacheApi) (*VersionProvider, error) {
+func NewProvider(log *slog.Logger, api aws.ElasticacheApi) (*VersionProvider, error) {
 	return &VersionProvider{
 		api: api,
 		log: log,

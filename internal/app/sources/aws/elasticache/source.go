@@ -3,17 +3,17 @@ package elasticache
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/elasticache"
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 )
 
 type Source struct {
-	log    *zap.Logger
+	log    *slog.Logger
 	api    aws.ElasticacheApi
 	cfg    *Config
 	vp     *VersionProvider
@@ -30,7 +30,7 @@ func (s *Source) Name() string {
 	return "elasticache"
 }
 
-func NewSource(api aws.ElasticacheApi, log *zap.Logger, cfg *Config) (*Source, error) {
+func NewSource(api aws.ElasticacheApi, log *slog.Logger, cfg *Config) (*Source, error) {
 	// Current implementation of filters requires this map to be non-nil to filter old versions
 	// so we set RemovePreRelease to true to filter out old versions anyway.
 	// NOTE: this is slightly confusing and should probably be refactored later on

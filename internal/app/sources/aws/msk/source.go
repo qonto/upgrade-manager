@@ -2,6 +2,7 @@ package msk
 
 import (
 	"context"
+	"log/slog"
 	"strings"
 	"time"
 
@@ -9,12 +10,11 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 )
 
 type Source struct {
 	api    aws.MSKApi
-	log    *zap.Logger
+	log    *slog.Logger
 	cfg    *Config
 	filter filters.Filter
 }
@@ -28,7 +28,7 @@ func (s *Source) Name() string {
 	return "MSK"
 }
 
-func NewSource(api aws.MSKApi, log *zap.Logger, cfg *Config) (*Source, error) {
+func NewSource(api aws.MSKApi, log *slog.Logger, cfg *Config) (*Source, error) {
 	cfg.Filters = filters.Config{
 		SemverVersions: &filters.SemverVersionsConfig{
 			RemovePreRelease: true,

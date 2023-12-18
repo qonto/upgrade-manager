@@ -1,13 +1,13 @@
 package rds
 
 import (
+	"log/slog"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/rds"
 	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap"
 )
 
 func TestLoad(t *testing.T) {
@@ -58,7 +58,7 @@ func TestLoad(t *testing.T) {
 		},
 	}
 	for _, tc := range tcases {
-		src, err := NewSource(api, zap.NewExample(), tc.cfg)
+		src, err := NewSource(api, slog.Default(), tc.cfg)
 		if err != nil {
 			t.Error(err)
 		}

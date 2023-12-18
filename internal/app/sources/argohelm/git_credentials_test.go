@@ -1,18 +1,18 @@
 package argohelm
 
 import (
+	"log/slog"
 	"os"
 	"regexp"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
-	"go.uber.org/zap"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestGetGitCredentialSecretsFromNamespace(t *testing.T) {
-	log := zap.NewExample()
+	log := slog.Default()
 	sampleKeyPath := "../../_testdata/fakeSampleKey"
 	f, err := os.ReadFile(sampleKeyPath)
 	if err != nil {

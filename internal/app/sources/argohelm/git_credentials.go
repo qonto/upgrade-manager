@@ -3,6 +3,7 @@ package argohelm
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"regexp"
 	"strconv"
 	"time"
@@ -11,7 +12,6 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 	"github.com/qonto/upgrade-manager/internal/app/sources/utils/gitutils"
 	k8sClient "github.com/qonto/upgrade-manager/internal/infra/kubernetes"
-	"go.uber.org/zap"
 )
 
 // Retrieve all git credentials in the namespace which have "repo" in their name
@@ -21,7 +21,7 @@ import (
 // "url: yyyxxx", "username: zzz"
 //
 // ssh secrets have "type: ssh", "sshPrivateKey; xxx", "url: yyyxxx"
-func getGitRepoConnections(namespace string, r *regexp.Regexp, client k8sClient.KubernetesClient, log *zap.Logger) ([]*gitutils.RepoConnection, error) {
+func getGitRepoConnections(namespace string, r *regexp.Regexp, client k8sClient.KubernetesClient, log *slog.Logger) ([]*gitutils.RepoConnection, error) {
 	var connections []*gitutils.RepoConnection
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()

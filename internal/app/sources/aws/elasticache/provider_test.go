@@ -1,12 +1,12 @@
 package elasticache
 
 import (
+	"log/slog"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"go.uber.org/zap"
 )
 
 func TestLoad(t *testing.T) {
@@ -85,7 +85,7 @@ func TestLoad(t *testing.T) {
 		},
 	}
 	for idx, tc := range testCases {
-		vp, err := NewProvider(zap.NewExample(), mockApi)
+		vp, err := NewProvider(slog.Default(), mockApi)
 		if err != nil {
 			t.Error(err)
 		}

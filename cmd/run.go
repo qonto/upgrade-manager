@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,7 +14,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/build"
 	"github.com/qonto/upgrade-manager/internal/infra/http"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
-	"go.uber.org/zap"
 )
 
 func Run() error {
@@ -22,18 +22,9 @@ func Run() error {
 	if err != nil {
 		return err
 	}
-	zapConfig := zap.NewProductionConfig()
-	if debug {
-		zapConfig.Level.SetLevel(zap.DebugLevel)
-	}
+	
+	logger := buildLogger(logLevel, logFormat)
 
-	logger, err := zapConfig.Build()
-	if err != nil {
-		return err
-	}
-	defer func() {
-		err = logger.Sync()
-	}()
 
 	logger.Info(build.VersionMessage())
 	signals := make(chan os.Signal, 1)
@@ -86,4 +77,30 @@ func Run() error {
 	}()
 	exitErr := <-errChan
 	return exitErr
+}
+
+func buildLogger(level string, format string) *slog.Logger {
+	var programLevel = new(slog.LevelVar)
+	switch level {
+	case "debug":
+		programLevel.Set(slog.LevelDebug)
+	case "info":
+		programLevel.Set(slog.LevelInfo)
+	case "warn":
+		programLevel.Set(slog.LevelWarn)
+	case "error":
+		programLevel.Set(slog.LevelError)
+	default:
+		programLevel.Set(slog.LevelInfo)
+	}
+
+	options := &slog.HandlerOptions{Level: programLevel}
+	switch format {
+	case "text":
+		return slog.New(slog.NewTextHandler(os.Stdout, options))
+	case "json":
+		return slog.New(slog.NewJSONHandler(os.Stdout, options))
+	default:
+		return slog.New(slog.NewTextHandler(os.Stdout, options))
+	}
 }
