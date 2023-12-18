@@ -10,11 +10,11 @@ import (
 
 func TestMetaCalculateObsolescenceScore(t *testing.T) {
 	testCases := []struct {
-		software      s.Software
+		software      *s.Software
 		expectedScore int
 	}{
 		{
-			software: s.Software{
+			software: &s.Software{
 				Name:       "EKS-cluster-metacalculator",
 				Calculator: s.MetaCalculator,
 				Dependencies: []*s.Software{
@@ -38,7 +38,7 @@ func TestMetaCalculateObsolescenceScore(t *testing.T) {
 	for _, tc := range testCases {
 		fmt.Println(tc.software.Name)
 		calculator := New(zap.NewExample(), tc.software.Calculator, true)
-		err := calculator.CalculateObsolescenceScore(&tc.software)
+		err := calculator.CalculateObsolescenceScore(tc.software)
 		if err != nil {
 			t.Fatal(err)
 		}

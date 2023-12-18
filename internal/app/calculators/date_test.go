@@ -10,11 +10,11 @@ import (
 
 func TestDateCalculateObsolescenceScore(t *testing.T) {
 	testCases := []struct {
-		software      s.Software
+		software      *s.Software
 		expectedScore int
 	}{
 		{
-			software: s.Software{
+			software: &s.Software{
 				Version:           s.Version{ReleaseDate: time.Now()},
 				VersionCandidates: []s.Version{},
 				Dependencies: []*s.Software{
@@ -31,7 +31,7 @@ func TestDateCalculateObsolescenceScore(t *testing.T) {
 			expectedScore: 25,
 		},
 		{
-			software: s.Software{
+			software: &s.Software{
 				Version:           s.Version{ReleaseDate: time.Now()},
 				VersionCandidates: []s.Version{},
 				Dependencies: []*s.Software{
@@ -51,7 +51,7 @@ func TestDateCalculateObsolescenceScore(t *testing.T) {
 			expectedScore: 25,
 		},
 		{
-			software: s.Software{
+			software: &s.Software{
 				Version: s.Version{ReleaseDate: time.Now().Add(-73 * time.Hour)},
 				VersionCandidates: []s.Version{
 					{ReleaseDate: time.Now().Add(-23 * time.Hour)},
@@ -62,7 +62,7 @@ func TestDateCalculateObsolescenceScore(t *testing.T) {
 	}
 	calculator := New(zap.NewExample(), s.ReleaseDateCalculator, true)
 	for _, tc := range testCases {
-		err := calculator.CalculateObsolescenceScore(&tc.software)
+		err := calculator.CalculateObsolescenceScore(tc.software)
 		if err != nil {
 			t.Fatal(err)
 		}

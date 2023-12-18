@@ -41,24 +41,24 @@ func TestLoad(t *testing.T) {
 	)
 
 	tcases := []struct {
-		cfg                   Config
+		cfg                   *Config
 		expectedSoftwareCount int
 	}{
 		{
-			cfg: Config{
+			cfg: &Config{
 				AggregationLevel: "cluster",
 			},
 			expectedSoftwareCount: 2,
 		},
 		{
-			cfg: Config{
+			cfg: &Config{
 				AggregationLevel: "instance",
 			},
 			expectedSoftwareCount: 3,
 		},
 	}
 	for _, tc := range tcases {
-		src, err := NewSource(api, zap.NewExample(), &tc.cfg)
+		src, err := NewSource(api, zap.NewExample(), tc.cfg)
 		if err != nil {
 			t.Error(err)
 		}

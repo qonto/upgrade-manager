@@ -13,16 +13,13 @@ linters:
   enable-all: false
   disable-all: false
   enable:
-    - deadcode
     - errcheck
     - gosimple
     - govet
     - ineffassign
     - staticcheck
-    - structcheck
     - typecheck
     - unused
-    - varcheck
     - asciicheck
     - bodyclose
     - dogsled
@@ -41,7 +38,6 @@ linters:
     - gomodguard
     - goprintffuncname
     - gosec
-    - ifshort
     - importas
     - makezero
     - misspell

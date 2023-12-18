@@ -10,11 +10,11 @@ import (
 
 func TestCalculateObsolescenceScore(t *testing.T) {
 	testCases := []struct {
-		software      s.Software
+		software      *s.Software
 		expectedScore int
 	}{
 		{
-			software: s.Software{
+			software: &s.Software{
 				Name:              "no-deps-and-up-to-date",
 				Version:           s.Version{Version: "11.1.1"},
 				VersionCandidates: []s.Version{},
@@ -23,7 +23,7 @@ func TestCalculateObsolescenceScore(t *testing.T) {
 			expectedScore: 0,
 		},
 		{
-			software: s.Software{
+			software: &s.Software{
 				Name:              "deps and up-to-date",
 				Version:           s.Version{Version: "11.1.1"},
 				VersionCandidates: []s.Version{},
@@ -47,7 +47,7 @@ func TestCalculateObsolescenceScore(t *testing.T) {
 	for _, tc := range testCases {
 		fmt.Println(tc.software.Name)
 		calculator := New(zap.NewExample(), tc.software.Calculator, true)
-		err := calculator.CalculateObsolescenceScore(&tc.software)
+		err := calculator.CalculateObsolescenceScore(tc.software)
 		if err != nil {
 			t.Fatal(err)
 		}
