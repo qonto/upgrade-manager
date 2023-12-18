@@ -25,7 +25,6 @@ linters:
     - varcheck
     - asciicheck
     - bodyclose
-    - depguard
     - dogsled
     - durationcheck
     - errorlint
