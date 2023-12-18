@@ -1,0 +1,92 @@
+run:
+  concurrency: 4
+  deadline: 1m
+  issues-exit-code: 1
+  tests: true
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
+
+linters:
+  enable-all: false
+  disable-all: false
+  enable:
+    - deadcode
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unused
+    - varcheck
+    - asciicheck
+    - bodyclose
+    - depguard
+    - dogsled
+    - durationcheck
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - forcetypeassert
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosec
+    - ifshort
+    - importas
+    - makezero
+    - misspell
+    - nakedret
+    - nestif
+    - nilerr
+    - noctx
+    - predeclared
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - wastedassign
+    - whitespace
+    - gci # File is not `gci`-ed with --skip-generated -s standard,default (gci) 
+linters-settings:
+  gocyclo:
+    min-complexity: 35
+
+  revive:
+    rules:
+      - name: exported
+        disabled: true
+
+issues:
+  exclude-use-default: false
+  max-per-linter: 1024
+  max-same: 1024
+
+  exclude-rules:
+    - text: "SA1029"
+      linters:
+        - staticcheck
+    - text: "G304"
+      linters:
+        - gosec
+    # Exclude some linters from running on test files
+    - path: _test\.go
+      linters:
+        # bodyclose reports some false-positives when using a test request recorder
+        - bodyclose
+        # It's overkill to use `NewRequestWithContext` in tests
+        - noctx
+        - goerr113

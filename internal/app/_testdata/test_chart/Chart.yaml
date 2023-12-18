@@ -1,0 +1,12 @@
+# Chart.yaml
+apiVersion: v2
+name: traefik
+version: 2.9.1
+description: A Traefik based Kubernetes ingress controller
+dependencies:
+- name: traefik
+  version: 11.1.1
+  repository: https://helm.traefik.io/traefik
+- name: kube-prometheus-stack
+  version: 40.3.1
+  repository: https://prometheus-community.github.io/helm-charts

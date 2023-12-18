@@ -1,0 +1,19 @@
+apiVersion: v1
+entries:
+  bar:
+  - apiVersion: v2
+    appVersion: 1.0.1
+    created: "2023-08-10T13:43:03.784910144Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: Helm chart to deploy foo
+    digest: 5751efb02879f5fdbe4849318aa11a0253b25e8dcd86dzdf2aa55d7267163cbc
+    name: bar
+    type: application
+    urls:
+    - s3://foo/bar-1.0.1.tgz
+    version: bar-1.0.1

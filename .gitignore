@@ -1,0 +1,5 @@
+upgrade-manager
+tmp*
+/config.yaml
+*.tgz
+.*rendered.*
