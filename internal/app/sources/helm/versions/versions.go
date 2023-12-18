@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"context"
 	"fmt"
+	"log/slog"
 	"net/url"
 	"strings"
 	"time"
@@ -15,7 +16,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/repo"
-	"log/slog"
 )
 
 func PopulateTopLevelSoftware(s3Api aws.S3Api, log *slog.Logger, topLevelSoftware *soft.Software, repoURL string, chartName string, filter filters.Filter) error {

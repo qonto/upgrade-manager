@@ -2,13 +2,13 @@ package filesystemhelm
 
 import (
 	"fmt"
+	"log/slog"
 
 	soft "github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/app/sources/helm/versions"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"helm.sh/helm/v3/pkg/chart"
-	"log/slog"
 )
 
 const FileSystemHelm soft.SoftwareType = "filesystemHelm"

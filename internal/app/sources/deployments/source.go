@@ -3,6 +3,7 @@ package deployments
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 
@@ -12,7 +13,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
 	"github.com/qonto/upgrade-manager/internal/infra/registry"
-	"log/slog"
 )
 
 const (

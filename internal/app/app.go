@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"os"
 	"sync"
 	"time"
@@ -28,7 +29,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/sources/filesystemhelm"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
-	"log/slog"
 )
 
 type App struct {

@@ -8,7 +8,6 @@ import (
 )
 
 var (
-	debug          bool
 	configFilePath string
 	logLevel       string
 	logFormat      string

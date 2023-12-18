@@ -2,6 +2,7 @@ package eks
 
 import (
 	"fmt"
+	"log/slog"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -10,7 +11,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	awsInfra "github.com/qonto/upgrade-manager/internal/infra/aws"
-	"log/slog"
 )
 
 func TestLoad(t *testing.T) {

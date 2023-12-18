@@ -1,11 +1,11 @@
 package elasticache
 
 import (
+	"log/slog"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"log/slog"
 )
 
 func TestSourceLoad(t *testing.T) {

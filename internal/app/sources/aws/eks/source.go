@@ -3,6 +3,7 @@ package eks
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/eks"
@@ -10,7 +11,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/app/semver"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"log/slog"
 )
 
 type Source struct {

@@ -3,13 +3,13 @@ package elasticache
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/elasticache"
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/filters"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
-	"log/slog"
 )
 
 type Source struct {

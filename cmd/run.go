@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,7 +14,6 @@ import (
 	"github.com/qonto/upgrade-manager/internal/build"
 	"github.com/qonto/upgrade-manager/internal/infra/http"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
-	"log/slog"
 )
 
 func Run() error {
@@ -79,7 +79,7 @@ func Run() error {
 }
 
 func buildLogger(level string, format string) *slog.Logger {
-	var programLevel = new(slog.LevelVar)
+	programLevel := new(slog.LevelVar)
 	switch level {
 	case "debug":
 		programLevel.Set(slog.LevelDebug)
