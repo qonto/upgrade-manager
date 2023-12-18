@@ -1,11 +1,11 @@
 package argohelm
 
 import (
-	"log/slog"
 	"testing"
 
 	"github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/qonto/upgrade-manager/internal/app/sources/utils/gitutils"
+	"log/slog"
 )
 
 func TestMatchGitRepoConnection(t *testing.T) {

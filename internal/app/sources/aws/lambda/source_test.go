@@ -2,7 +2,6 @@ package lambda
 
 import (
 	"errors"
-	"log/slog"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
@@ -12,6 +11,7 @@ import (
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"log/slog"
 )
 
 func TestLoad(t *testing.T) {

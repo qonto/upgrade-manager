@@ -1,11 +1,11 @@
 package calculators
 
 import (
-	"log/slog"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/stretchr/testify/assert"
+	"log/slog"
 )
 
 func TestCandidateCountCalculateObsolescence(t *testing.T) {

@@ -1,7 +1,6 @@
 package argohelm
 
 import (
-	"log/slog"
 	"os"
 	"regexp"
 	"testing"
@@ -9,6 +8,7 @@ import (
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"log/slog"
 )
 
 func TestGetGitCredentialSecretsFromNamespace(t *testing.T) {

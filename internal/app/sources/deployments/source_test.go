@@ -1,7 +1,6 @@
 package deployments
 
 import (
-	"log/slog"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
@@ -11,6 +10,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"log/slog"
 )
 
 func createDeployment(image string, deploymentName string, containerName string, calculator software.CalculatorType) appsv1.Deployment {

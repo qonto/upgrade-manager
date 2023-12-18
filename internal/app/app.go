@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"os"
 	"sync"
 	"time"
@@ -29,6 +28,7 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/sources/filesystemhelm"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
+	"log/slog"
 )
 
 type App struct {
@@ -109,7 +109,8 @@ func (a *App) InitSources() error {
 			softSource, err := argohelm.NewSource(item, a.log, a.k8sClient, true, a.s3Api)
 			if err != nil {
 				a.log.Error(fmt.Sprint(err))
-				os.Exit(1)			}
+				os.Exit(1)
+			}
 			a.sources = append(a.sources, softSource)
 		}
 	}
@@ -118,7 +119,8 @@ func (a *App) InitSources() error {
 			softSource, err := deployments.NewSource(a.log, a.k8sClient, item)
 			if err != nil {
 				a.log.Error(fmt.Sprint(err))
-				os.Exit(1)			}
+				os.Exit(1)
+			}
 			a.sources = append(a.sources, softSource)
 		}
 	}
@@ -126,35 +128,40 @@ func (a *App) InitSources() error {
 		escSource, err := elasticacheSource.NewSource(a.escApi, a.log, &a.Config.Sources.Aws.Elasticache)
 		if err != nil {
 			a.log.Error(fmt.Sprint(err))
-			os.Exit(1)		}
+			os.Exit(1)
+		}
 		a.sources = append(a.sources, escSource)
 	}
 	if a.Config.Sources.Aws.Eks.Enabled {
 		eksSource, err := eksSource.NewSource(a.eksApi, a.log, &a.Config.Sources.Aws.Eks)
 		if err != nil {
 			a.log.Error(fmt.Sprint(err))
-			os.Exit(1)		}
+			os.Exit(1)
+		}
 		a.sources = append(a.sources, eksSource)
 	}
 	if a.Config.Sources.Aws.Msk.Enabled {
 		mskSource, err := mskSource.NewSource(a.mskApi, a.log, &a.Config.Sources.Aws.Msk)
 		if err != nil {
 			a.log.Error(fmt.Sprint(err))
-			os.Exit(1)		}
+			os.Exit(1)
+		}
 		a.sources = append(a.sources, mskSource)
 	}
 	if a.Config.Sources.Aws.Rds.Enabled {
 		rdsSource, err := rdsSource.NewSource(a.rdsApi, a.log, &a.Config.Sources.Aws.Rds)
 		if err != nil {
 			a.log.Error(fmt.Sprint(err))
-			os.Exit(1)		}
+			os.Exit(1)
+		}
 		a.sources = append(a.sources, rdsSource)
 	}
 	if a.Config.Sources.Aws.Lambda.Enabled {
 		lambdaSource, err := lambdaSource.NewSource(a.lambdaApi, a.log, &a.Config.Sources.Aws.Lambda)
 		if err != nil {
 			a.log.Error(fmt.Sprint(err))
-			os.Exit(1)		}
+			os.Exit(1)
+		}
 		a.sources = append(a.sources, lambdaSource)
 	}
 	return nil

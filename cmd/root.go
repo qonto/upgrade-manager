@@ -10,8 +10,8 @@ import (
 var (
 	debug          bool
 	configFilePath string
-	logLevel string
-	logFormat string
+	logLevel       string
+	logFormat      string
 )
 
 func InitAndRunCommand() error {

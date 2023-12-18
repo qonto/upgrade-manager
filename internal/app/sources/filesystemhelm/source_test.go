@@ -2,12 +2,12 @@ package filesystemhelm
 
 import (
 	"fmt"
-	"log/slog"
 	"os"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/stretchr/testify/mock"
+	"log/slog"
 )
 
 func TestLoadSoftware(t *testing.T) {

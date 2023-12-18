@@ -2,12 +2,12 @@ package kubernetes
 
 import (
 	"context"
-	"log/slog"
 	"testing"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/dynamic/fake"
+	"log/slog"
 )
 
 func TestRawToArgoApplication(t *testing.T) {

@@ -3,7 +3,6 @@ package argohelm
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"os"
 	"regexp"
 	"strconv"
@@ -19,6 +18,7 @@ import (
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
 	"helm.sh/helm/v3/pkg/chart"
+	"log/slog"
 )
 
 const ArgoHelm soft.SoftwareType = "argoHelm"

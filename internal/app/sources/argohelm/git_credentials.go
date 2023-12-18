@@ -3,7 +3,6 @@ package argohelm
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"regexp"
 	"strconv"
 	"time"
@@ -12,6 +11,7 @@ import (
 	"github.com/go-git/go-git/v5/plumbing/transport/ssh"
 	"github.com/qonto/upgrade-manager/internal/app/sources/utils/gitutils"
 	k8sClient "github.com/qonto/upgrade-manager/internal/infra/kubernetes"
+	"log/slog"
 )
 
 // Retrieve all git credentials in the namespace which have "repo" in their name

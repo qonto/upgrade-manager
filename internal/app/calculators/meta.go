@@ -1,9 +1,8 @@
 package calculators
 
 import (
-	"log/slog"
-
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
+	"log/slog"
 )
 
 var calculatorCache = make(map[software.CalculatorType]software.Calculator)

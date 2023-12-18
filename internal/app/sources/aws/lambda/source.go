@@ -2,13 +2,13 @@ package lambda
 
 import (
 	"context"
-	"log/slog"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/service/lambda"
 	"github.com/aws/aws-sdk-go-v2/service/lambda/types"
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
+	"log/slog"
 )
 
 type Source struct {

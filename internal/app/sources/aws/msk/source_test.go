@@ -1,7 +1,6 @@
 package msk
 
 import (
-	"log/slog"
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/service/kafka"
@@ -9,6 +8,7 @@ import (
 	"github.com/qonto/upgrade-manager/internal/app/sources/utils"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/stretchr/testify/mock"
+	"log/slog"
 )
 
 func TestLoad(t *testing.T) {

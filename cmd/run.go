@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
@@ -14,6 +13,7 @@ import (
 	"github.com/qonto/upgrade-manager/internal/build"
 	"github.com/qonto/upgrade-manager/internal/infra/http"
 	"github.com/qonto/upgrade-manager/internal/infra/kubernetes"
+	"log/slog"
 )
 
 func Run() error {
@@ -22,9 +22,8 @@ func Run() error {
 	if err != nil {
 		return err
 	}
-	
-	logger := buildLogger(logLevel, logFormat)
 
+	logger := buildLogger(logLevel, logFormat)
 
 	logger.Info(build.VersionMessage())
 	signals := make(chan os.Signal, 1)

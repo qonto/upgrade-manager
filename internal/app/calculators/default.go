@@ -2,11 +2,11 @@ package calculators
 
 import (
 	"fmt"
-	"log/slog"
 
 	goversion "github.com/hashicorp/go-version"
 	soft "github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/semver"
+	"log/slog"
 )
 
 const (

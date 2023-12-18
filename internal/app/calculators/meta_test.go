@@ -2,10 +2,10 @@ package calculators
 
 import (
 	"fmt"
-	"log/slog"
 	"testing"
 
 	s "github.com/qonto/upgrade-manager/internal/app/core/software"
+	"log/slog"
 )
 
 func TestMetaCalculateObsolescenceScore(t *testing.T) {
