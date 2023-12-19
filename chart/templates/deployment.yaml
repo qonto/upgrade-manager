@@ -43,8 +43,8 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           args:
-            - "server"
-            - "--config"
+            - "start"
+            - "--config-file"
             - "{{ .Values.configFilePath }}"
             - "--log-format"
             - "{{ .Values.logFormat }}"
