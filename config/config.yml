@@ -10,7 +10,6 @@ sources:
         semver-versions:
            remove-pre-release: true
            remove-first-major-version: true
-
       registries:
         <private-registry-name>:
           enable-date-retrieval: true
@@ -19,7 +18,7 @@ sources:
   argocdHelm:
     - enabled: true
       argocd-namespace: argocd # namespace where the argocd application object is deployed
-      git-credentials-secrets-namespace: argocd # namespace where secrets containing git credentials are deployed
+      git-credentials-secrets-namespace: upgrade-manager # namespace where secrets containing git credentials are deployed
       git-credentials-secrets-pattern: ".*-repo-.*" # regex to filter which secrets to fetch
       filters:
         semver-versions:
@@ -32,19 +31,19 @@ sources:
           # ["kyverno"] # regular expression, if include is empty, it includes all namespaces
           exclude: []
           # ["default", "temporary-*", "feature-*", "kube-system"] # regular expression if exclude is empty, it does not exclude any namespace
-  filesystemHelm:
-    - enabled: true
-      paths:
-        - "./internal/app/_testdata/test_chart/Chart.yaml"
-        - "./internal/app/_testdata/test_chart2/Chart.yaml"
-        - "./internal/app/_testdata/test_chart3/Chart.yaml"
-        - "./internal/app/_testdata/test_chart4/Chart.yaml"
-      filters:
-        semver-versions:
-          remove-pre-release: true
-          remove-first-major-version: true
-        recent-versions:
-          days: 21
+  # filesystemHelm:
+  #   - enabled: true
+  #     paths:
+  #       - "./internal/app/_testdata/test_chart/Chart.yaml"
+  #       - "./internal/app/_testdata/test_chart2/Chart.yaml"
+  #       - "./internal/app/_testdata/test_chart3/Chart.yaml"
+  #       - "./internal/app/_testdata/test_chart4/Chart.yaml"
+  #     filters:
+  #       semver-versions:
+  #         remove-pre-release: true
+  #         remove-first-major-version: true
+  #       recent-versions:
+  #         days: 21
   aws:
     eks:
       enabled: true
@@ -63,22 +62,22 @@ sources:
       enabled: true 
       request-timeout: 15s
       deprecated-runtimes-score: 100 # defaults to 100
-      deprecated-runtimes:
-        - "nodejs"
-        - "nodejs4.3"
-        - "nodejs4.3-edge"
-        - "nodejs6.10"
-        - "nodejs8.10"
-        - "nodejs10.x"
-        - "nodejs12.x"
-        - "java8"
-        - "java8.al2"
-        - "python2.7"
-        - "python3.6"
-        - "dotnetcore1.0"
-        - "dotnetcore2.0"
-        - "dotnet6"
-        - "ruby2.5"
+      # deprecated-runtimes:
+      #   - "nodejs"
+      #   - "nodejs4.3"
+      #   - "nodejs4.3-edge"
+      #   - "nodejs6.10"
+      #   - "nodejs8.10"
+      #   - "nodejs10.x"
+      #   - "nodejs12.x"
+      #   - "java8"
+      #   - "java8.al2"
+      #   - "python2.7"
+      #   - "python3.6"
+      #   - "dotnetcore1.0"
+      #   - "dotnetcore2.0"
+      #   - "dotnet6"
+      #   - "ruby2.5"
 http:
   host: 0.0.0.0
   port: 10000

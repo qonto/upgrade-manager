@@ -52,8 +52,10 @@ spec:
             - "{{ .Values.logLevel }}"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.env }} 
           env:
+            - name: HELM_CACHE_HOME
+              value: "/tmp"
+          {{- with .Values.env }} 
             {{- toYaml  . | nindent 12 }}
           {{- end -}}
           {{- with .Values.envFrom }}
