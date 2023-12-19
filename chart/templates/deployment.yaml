@@ -8,7 +8,6 @@ metadata:
     {{- include "upgrade-manager.labels" . | nindent 4 }}
 spec:
   replicas: 1
-  serviceName: "upgrade-manager"
   selector:
     matchLabels:
       {{- include "upgrade-manager.selectorLabels" . | nindent 6 }}
