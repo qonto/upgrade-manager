@@ -64,6 +64,9 @@ serviceMonitor:
   scrapeTimeout: 10s
   additionalLabels: {}
 
+rbac:
+  create: true
+
 resources: {}
   # limits:
   #   memory: 1000Mi
@@ -99,7 +102,7 @@ config:
     argocdHelm:
       - enabled: false
         # argocd-namespace: argocd # namespace where the argocd application object is deployed
-        # git-credentials-secrets-namespace: argocd # namespace where secrets containing git credentials are deployed
+        # git-credentials-secrets-namespace: upgrade-manager # namespace where secrets containing git credentials are deployed
         # git-credentials-secrets-pattern: ".*-repo-.*" # regex to filter which secrets to fetch
         # filters:
         #   semver-versions:

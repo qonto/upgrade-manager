@@ -1,0 +1,262 @@
+---
+# Source: upgrade-manager-chart/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: release-name-upgrade-manager-chart
+  labels:
+    helm.sh/chart: upgrade-manager-chart-0.0.0
+    app.kubernetes.io/name: upgrade-manager-chart
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "0.0.0"
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: upgrade-manager-chart/templates/config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: release-name-upgrade-manager-chart
+  namespace: "default"
+  labels:
+    helm.sh/chart: upgrade-manager-chart-0.0.0
+    app.kubernetes.io/name: upgrade-manager-chart
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "0.0.0"
+    app.kubernetes.io/managed-by: Helm
+data:
+  config.yaml: |
+    global:
+      aws:
+        region: us-east-1
+      interval: 10m
+    http:
+      host: 0.0.0.0
+      port: 10000
+      read-header-timeout: 10
+      read-timeout: 10
+      write-timeout: 10
+    sources:
+      argocdHelm:
+      - argocd-namespace: argocd
+        enabled: false
+        git-credentials-secrets-namespace: upgrade-manager
+      aws:
+        eks:
+          enabled: false
+          request-timeout: 15s
+        elasticache:
+          enabled: false
+          request-timeout: 15s
+        lambda:
+          deprecated-runtimes-score: 100
+          enabled: false
+          request-timeout: 15s
+        msk:
+          enabled: false
+          request-timeout: 15s
+        rds:
+          aggregation-level: cluster
+          enabled: false
+          request-timeout: 15s
+      filesystemHelm:
+      - enabled: false
+---
+# Source: upgrade-manager-chart/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: release-name-upgrade-manager-chart-cluster-role
+rules:
+- apiGroups:
+  - "apps"
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - applications
+  verbs:
+  - get
+  - list
+  - watch
+---
+# Source: upgrade-manager-chart/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: release-name-upgrade-manager-chart-cluster-role-binding
+  namespace: "default"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: release-name-upgrade-manager-chart-cluster-role
+subjects:
+- kind: ServiceAccount
+  name: release-name-upgrade-manager-chart
+  namespace: upgrade-manager
+---
+# Source: upgrade-manager-chart/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: release-name-upgrade-manager-chart-role
+  namespace: "default"
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+---
+# Source: upgrade-manager-chart/templates/rbac.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: release-name-upgrade-manager-chart-role-binding
+  namespace: "default"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: release-name-upgrade-manager-chart-role
+subjects:
+- kind: ServiceAccount
+  name: release-name-upgrade-manager-chart
+  namespace: upgrade-manager
+---
+# Source: upgrade-manager-chart/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-name-upgrade-manager-chart
+  namespace: "default"
+  labels:
+    helm.sh/chart: upgrade-manager-chart-0.0.0
+    app.kubernetes.io/name: upgrade-manager-chart
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "0.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: upgrade-manager-chart
+    app.kubernetes.io/instance: release-name
+---
+# Source: upgrade-manager-chart/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-upgrade-manager-chart
+  namespace: "default"
+  labels:
+    helm.sh/chart: upgrade-manager-chart-0.0.0
+    app.kubernetes.io/name: upgrade-manager-chart
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "0.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: upgrade-manager-chart
+      app.kubernetes.io/instance: release-name
+  template:
+    metadata:
+      annotations:
+        checksum/config: 03a678688fa4da3227cff2e616dfb5bca1a23e0851c5e2ff15e041dbc14a5ae2
+      labels:
+        helm.sh/chart: upgrade-manager-chart-0.0.0
+        app.kubernetes.io/name: upgrade-manager-chart
+        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/version: "0.0.0"
+        app.kubernetes.io/managed-by: Helm
+    spec:
+      serviceAccountName: release-name-upgrade-manager-chart
+      securityContext:
+        fsGroup: 10001
+      volumes:
+        - name: upgrade-manager-config
+          configMap:
+            name: release-name-upgrade-manager-chart
+      containers:
+        - name: upgrade-manager-chart
+          securityContext:
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 10001
+            runAsNonRoot: true
+            runAsUser: 10001
+          args:
+            - "start"
+            - "--config-file"
+            - "/app/config/config.yaml"
+            - "--log-format"
+            - "json"
+            - "--log-level"
+            - "info"
+          image: "public.ecr.aws/qonto/upgrade-manager:0.0.0"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - mountPath: /app/config
+              name: upgrade-manager-config
+              readOnly: true
+          resources:
+            {}
+---
+# Source: upgrade-manager-chart/templates/serviceMonitor.yaml
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: release-name-upgrade-manager-chart
+  namespace: "default"
+  labels:
+    helm.sh/chart: upgrade-manager-chart-0.0.0
+    app.kubernetes.io/name: upgrade-manager-chart
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "0.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: upgrade-manager-chart
+      app.kubernetes.io/instance: release-name
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 60s
+      scrapeTimeout: 10s
