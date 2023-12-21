@@ -1,16 +1,20 @@
-# Description
+# Upgrade-Manager
+![Go Report Card](https://goreportcard.com/badge/github.com/qonto/upgrade-manager)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/qonto/upgrade-manager)
 
 An autodiscovery tool to help you know what and when to update.
 
 ![boat](doc/image/grafana-dashboard.png "dashboard")
 *Grafana Dashboard displaying upgrade-manager's metrics, pointing out which apps need to be upgrading and their associated versions*
 
+---
+
 Key Features:
 + **Service discovery**: finds softwares deployed (see software sources supported)
 + **Obsolescence Score SLI (Service Level Indicator) Calculation**: compute each software’s obsolescence score and expose it as a prometheus metric
 + **New eligible release detection**: automatically find the version corresponding to a tailor-made selection logic
 
-
+---
 
 ### Managing IT system obsolescence is like being in a boat full of holes
 ![boat](doc/image/boat.png "Boat")
@@ -74,7 +78,7 @@ http:
 
 ## Required AWS Privileges when running AWS sources
 To automatically discover AWS resources and their newer versions, upgrade-manager needs the following AWS privileges (represented in Terraform HCL):
-```json
+```hcl
 data "aws_iam_policy_document" "upgrade-manager" {
   statement {
     sid = "elasticache"
