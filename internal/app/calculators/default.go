@@ -21,7 +21,7 @@ const (
 // The default calculator parses versions using Semantic Versioning.
 // It takes the last version available and computes the obsolescence score:
 //
-// x major versions late = m * 50
+// x major versions late = x * 50
 //
 // y minor versions late = y * 5
 //

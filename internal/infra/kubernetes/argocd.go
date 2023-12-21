@@ -77,7 +77,7 @@ func rawToArgoApplication(raw map[string]any) (*ArgoCDApplication, error) {
 	if !isHelmApp || !isDeployedApp {
 		return newApp, fmt.Errorf("not a properly deployed Argo Helm application")
 	}
-	// These fields exist an all apps
+	// These fields exist in all apps
 	server, found, err := unstructured.NestedString(raw, "spec", "destination", "server")
 	if err != nil || !found {
 		return newApp, err
