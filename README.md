@@ -33,7 +33,7 @@ Let's pretend your IT systems are a boat:
 In real life, a software's obsolescence (how big the hole is) is hard to measure, since we don't have a clear metric to quantify it.
 
 This is why upgrade-manager computes an **obsolescence score**, exposing it as a Prometheus metric:
-+ It represents **how obsolete a system** is, based on different calculation strategies (see more about calculators). It is essentially an indicator to measure the obsolescence at an software-level 
++ It represents **how obsolete a system** is, based on different calculation strategies (see [calculators](./doc/calculators/README.md). It is essentially an indicator to measure the obsolescence at an software-level 
 + It can be summed / averaged across all apps to have a company-wide freshness/obsolescence metric.
 
 ## Installation
