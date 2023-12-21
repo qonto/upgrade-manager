@@ -10,8 +10,8 @@ An autodiscovery tool to help you know what and when to update.
 ---
 
 Key Features:
-+ **Service discovery**: finds softwares deployed (see software sources supported)
-+ **Obsolescence Score SLI (Service Level Indicator) Calculation**: compute each software’s obsolescence score and expose it as a prometheus metric
++ **Service discovery**: finds softwares deployed (see the supported software [sources](doc/sources/README.md))
++ **Obsolescence Score SLI (Service Level Indicator) Calculation**: compute each software’s obsolescence score and expose it as a prometheus metric ((see [calculators](./doc/calculators/README.md))
 + **New eligible release detection**: automatically find the version corresponding to a tailor-made selection logic
 
 ---
@@ -33,7 +33,7 @@ Let's pretend your IT systems are a boat:
 In real life, a software's obsolescence (how big the hole is) is hard to measure, since we don't have a clear metric to quantify it.
 
 This is why upgrade-manager computes an **obsolescence score**, exposing it as a Prometheus metric:
-+ It represents **how obsolete a system** is, based on different calculation strategies (see [calculators](./doc/calculators/README.md). It is essentially an indicator to measure the obsolescence at an software-level 
++ It represents **how obsolete a system** is, based on different calculation strategies (see [calculators](./doc/calculators/README.md)). It is essentially an indicator to measure the obsolescence at an software-level 
 + It can be summed / averaged across all apps to have a company-wide freshness/obsolescence metric.
 
 ## Installation
@@ -165,11 +165,11 @@ data "aws_iam_policy_document" "upgrade-manager" {
 
 As we scale, we deploy more and more softwares. We end up with hundreds of softwares to maintain across many different platforms.
 
-Each of this softwares need to be updated regularly to benefit from security fixes, new features etc.
+Each of these softwares need to be updated regularly to benefit from security fixes, new features etc.
 
 
 ## Dashboard
-To visualize metrics, you can use the dashboard available in the `dashboard/` directory
+To visualize metrics, you can use the dashboard available in the `dashboard/` directory [here](./dashboards/)
 
 ## Alerting Patterns: deciding when to update softwares
 As SREs, we like to define SLOs/SLAs based on SLIs. Among other things, it helps us take actions based on specific thresholds.
