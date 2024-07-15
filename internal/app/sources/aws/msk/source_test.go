@@ -4,10 +4,9 @@ import (
 	"log/slog"
 	"testing"
 
-	"github.com/qonto/upgrade-manager/internal/app/core/software"
-
 	"github.com/aws/aws-sdk-go-v2/service/kafka"
 	"github.com/aws/aws-sdk-go-v2/service/kafka/types"
+	"github.com/qonto/upgrade-manager/internal/app/core/software"
 	"github.com/qonto/upgrade-manager/internal/app/sources/utils"
 	"github.com/qonto/upgrade-manager/internal/infra/aws"
 	"github.com/stretchr/testify/mock"

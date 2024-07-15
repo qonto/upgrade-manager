@@ -65,7 +65,7 @@ func TestSortSoftwareVersions(t *testing.T) {
 	for idx, testCase := range testCases {
 		err := Sort(testCase.versions)
 
-		if err != testCase.error && !errors.Is(err, testCase.error) {
+		if !errors.Is(err, testCase.error) {
 			t.Errorf("Case %d, error returned is not error expected. Expected %s, got: %s", idx+1, testCase.error, err)
 		}
 
