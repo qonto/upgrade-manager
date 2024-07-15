@@ -3,6 +3,7 @@ package msk
 import (
 	"context"
 	"log/slog"
+	"regexp"
 	"strings"
 	"time"
 
@@ -22,6 +23,12 @@ type Source struct {
 const (
 	MskCluster     software.SoftwareType = "msk cluster"
 	DefaultTimeout time.Duration         = time.Second * 15
+
+	// From version 3.7.0, AWS start using 3.7.x version with automated patch update manage by themselves.
+	// See https://docs.aws.amazon.com/msk/latest/developerguide/supported-kafka-versions.html#3.7.kraft
+	//
+	// When a candidate with x appears, we replace them with a 0 version to be still able to process them.
+	SemVerWithX = `(\d+|x)\.(\d+|x)\.(\d+|x)`
 )
 
 func (s *Source) Name() string {
@@ -49,6 +56,7 @@ func (s *Source) Load() ([]*software.Software, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	for _, cluster := range res.ClusterInfoList {
 		res, err := s.api.GetCompatibleKafkaVersions(context.TODO(), &kafka.GetCompatibleKafkaVersionsInput{
 			ClusterArn: cluster.ClusterArn,
@@ -56,9 +64,10 @@ func (s *Source) Load() ([]*software.Software, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		versionCandidates := []software.Version{}
 		for _, v := range res.CompatibleKafkaVersions[0].TargetVersions {
-			versionCandidate := strings.ReplaceAll(v, ".tiered", "")
+			versionCandidate := cleanMSKVersionSpecials(v)
 			versionCandidates = append(versionCandidates, software.Version{Version: versionCandidate})
 		}
 		s := &software.Software{
@@ -72,4 +81,16 @@ func (s *Source) Load() ([]*software.Software, error) {
 	}
 
 	return softwares, nil
+}
+
+func cleanMSKVersionSpecials(version string) string {
+	semverXRegexp := regexp.MustCompile(SemVerWithX)
+
+	// Clean tiered version
+	versionCandidate := strings.ReplaceAll(version, ".tiered", "")
+
+	// Clean .x version to be valid semver
+	return semverXRegexp.ReplaceAllStringFunc(versionCandidate, func(m string) string {
+		return regexp.MustCompile(`x`).ReplaceAllString(m, "0")
+	})
 }

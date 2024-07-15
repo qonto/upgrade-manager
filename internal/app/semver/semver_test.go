@@ -1,6 +1,7 @@
 package semver
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/qonto/upgrade-manager/internal/app/core/software"
@@ -10,6 +11,7 @@ func TestSortSoftwareVersions(t *testing.T) {
 	testCases := []struct {
 		versions []software.Version
 		expected string
+		error    error
 	}{
 		{
 			versions: []software.Version{
@@ -24,6 +26,7 @@ func TestSortSoftwareVersions(t *testing.T) {
 				},
 			},
 			expected: "7.0.0",
+			error:    nil,
 		},
 		{
 			versions: []software.Version{
@@ -38,11 +41,35 @@ func TestSortSoftwareVersions(t *testing.T) {
 				},
 			},
 			expected: "7.0.0",
+			error:    nil,
+		},
+		{
+			versions: []software.Version{
+				{
+					Name:    "test-soft",
+					Version: "5.0.0",
+				},
+				{
+					Name:    "test-soft",
+					Version: "6.x.x",
+				},
+				{
+					Name:    "test-soft",
+					Version: "7.0.0",
+				},
+			},
+			expected: "",
+			error:    ErrorInSemverSortFunction,
 		},
 	}
 	for idx, testCase := range testCases {
-		Sort(testCase.versions)
-		if testCase.versions[0].Version != testCase.expected {
+		err := Sort(testCase.versions)
+
+		if !errors.Is(err, testCase.error) {
+			t.Errorf("Case %d, error returned is not error expected. Expected %s, got: %s", idx+1, testCase.error, err)
+		}
+
+		if testCase.error == nil && testCase.versions[0].Version != testCase.expected {
 			t.Errorf("Case %d, wrong first element in sorted slice. Expected %s, got: %s", idx+1, testCase.expected, testCase.versions[0].Version)
 		}
 	}
