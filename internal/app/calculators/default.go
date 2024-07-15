@@ -92,7 +92,11 @@ func (c *DefaultCalculator) CalculateObsolescenceScore(s *soft.Software) error {
 	c.log.Debug(fmt.Sprintf("Total of %d softwares to compute in order to compute software %s's total score", len(softwaresToCalculate), s.Name))
 	topLevelScore := 0
 	for _, software := range softwaresToCalculate {
-		semver.Sort(software.VersionCandidates)
+		err := semver.Sort(software.VersionCandidates)
+		if err != nil {
+			return fmt.Errorf("failed to sort versions candidate for software %s, %w", software.Name, err)
+		}
+
 		// Retrieve semantic versions
 		lv, err := goversion.NewSemver(software.VersionCandidates[0].Version)
 		if err != nil {
