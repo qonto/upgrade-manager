@@ -6,9 +6,10 @@ import (
 )
 
 type Config struct {
-	Name          string                     `yaml:"name"`
-	Namespace     string                     `yaml:"namespace"`
-	LabelSelector map[string]string          `yaml:"label-selector"`
-	Registries    map[string]registry.Config `yaml:"registries"`
-	Filters       filters.Config             `yaml:"filters"`
+	Name                string                     `yaml:"name"`
+	Namespace           string                     `yaml:"namespace"`
+	LabelSelector       map[string]string          `yaml:"label-selector"`
+	Registries          map[string]registry.Config `yaml:"registries"`
+	Filters             filters.Config             `yaml:"filters"`
+	RepositoriesAliases map[string]string          `yaml:"repositories-aliases"`
 }

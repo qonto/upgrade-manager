@@ -1,0 +1,29 @@
+global:
+  interval: 10m
+  aws:
+    region: us-east-1
+sources:
+  argocdHelm:
+    - enabled: false
+  filesystemHelm:
+    - enabled: true
+      paths:
+        - "./internal/app/_testdata/test_chart/Chart.yaml"
+        - "./internal/app/_testdata/test_chart2/Chart.yaml"
+        - "./internal/app/_testdata/test_chart3/Chart.yaml"
+        - "./internal/app/_testdata/test_chart4/Chart.yaml"
+        - "./internal/app/_testdata/test_chart5/Chart.yaml" 
+      filters:
+        semver-versions:
+          remove-pre-release: true
+          remove-first-major-version: true
+        recent-versions:
+          days: 21
+      repositories-aliases:
+        "@my-alias": "https://prometheus-community.github.io/helm-charts"
+http:
+  host: 0.0.0.0
+  port: 10000
+  write-timeout: 10
+  read-timeout: 10
+  read-header-timeout: 10

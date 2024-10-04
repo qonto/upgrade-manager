@@ -17,6 +17,7 @@ sources:
         - "./internal/app/_testdata/test_chart2/Chart.yaml"
         - "./internal/app/_testdata/test_chart3/Chart.yaml"
         - "./internal/app/_testdata/test_chart4/Chart.yaml"
+        - "./internal/app/_testdata/test_chart5/Chart.yaml"
       filters:
         stabilityDays: 21
         skipPrerelease: true

@@ -6,13 +6,14 @@ import (
 )
 
 type Config struct {
-	Enabled                      bool          `yaml:"enabled"`
-	Name                         string        `yaml:"name"`
-	ClusterURL                   string        `yaml:"cluster-url"`
-	ArgoCDNamespace              string        `yaml:"argocd-namespace" validate:"required"`
-	GitSecretsNamespace          string        `yaml:"git-credentials-secrets-namespace" validate:"required"`
-	GitCredentialsSecretsPattern string        `yaml:"git-credentials-secrets-pattern" validate:"required"`
-	Filters                      FiltersConfig `yaml:"filters"`
+	Enabled                      bool              `yaml:"enabled"`
+	Name                         string            `yaml:"name"`
+	ClusterURL                   string            `yaml:"cluster-url"`
+	ArgoCDNamespace              string            `yaml:"argocd-namespace" validate:"required"`
+	GitSecretsNamespace          string            `yaml:"git-credentials-secrets-namespace" validate:"required"`
+	GitCredentialsSecretsPattern string            `yaml:"git-credentials-secrets-pattern" validate:"required"`
+	Filters                      FiltersConfig     `yaml:"filters"`
+	RepositoriesAliases          map[string]string `yaml:"repositories-aliases"`
 }
 
 type FiltersConfig struct {

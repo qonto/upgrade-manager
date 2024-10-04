@@ -5,7 +5,8 @@ import (
 )
 
 type Config struct {
-	Enabled bool           `yaml:"enabled"`
-	Paths   []string       `yaml:"paths" validate:"dive,file"`
-	Filters filters.Config `yaml:"filters"`
+	Enabled             bool              `yaml:"enabled"`
+	Paths               []string          `yaml:"paths" validate:"dive,file"`
+	Filters             filters.Config    `yaml:"filters"`
+	RepositoriesAliases map[string]string `yaml:"repositories-aliases"`
 }
