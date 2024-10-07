@@ -61,7 +61,7 @@ func getRepoBackendType(repoUrl string) (RepoBackendType, error) {
 	switch u.Scheme {
 	case "s3":
 		return S3HelmRepo, nil
-	case "https", "oci":
+	case "https", "http", "oci":
 		// determine if GitRepo or HelmRepo
 		return HelmRepo, nil
 	case "file":
