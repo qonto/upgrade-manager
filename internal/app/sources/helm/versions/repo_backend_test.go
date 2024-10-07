@@ -85,7 +85,7 @@ func TestBuildRepoBackend(t *testing.T) {
 		},
 		{
 			name:         "With Repo Alias targeting a S3 bucket",
-			repoAliases:  map[string]string{"@alias": "s3://my-bucket/charts"},
+			repoAliases:  map[string]string{"alias": "s3://my-bucket/charts"},
 			repoURL:      "alias",
 			chartName:    "my-chart",
 			expectedType: &S3HelmRepoBackend{},
@@ -94,7 +94,7 @@ func TestBuildRepoBackend(t *testing.T) {
 		{
 			name:         "With Repo Alias targeting a Git repo",
 			repoAliases:  map[string]string{"@alias": "https://github.com/user/repo.git"},
-			repoURL:      "alias",
+			repoURL:      "@alias",
 			chartName:    "my-chart",
 			expectedType: nil,
 			expectError:  false,
