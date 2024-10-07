@@ -70,7 +70,12 @@ func getRepoBackendType(repoUrl string) (RepoBackendType, error) {
 	return "", fmt.Errorf("could not determine RepoBackendType for url %s", repoUrl)
 }
 
-func buildRepoBackend(repoURL string, chartName string, log *slog.Logger, s3Api aws.S3Api) (RepoBackend, error) {
+func buildRepoBackend(repoAliases map[string]string, repoURL string, chartName string, log *slog.Logger, s3Api aws.S3Api) (RepoBackend, error) {
+	if repoAliases != nil && repoAliases[repoURL] != "" {
+		log.Debug(fmt.Sprintf("Repo URL %s resolved to %s", repoURL, repoAliases[repoURL]))
+		repoURL = repoAliases[repoURL]
+	}
+
 	repoType, err := getRepoBackendType(repoURL)
 	if err != nil {
 		return nil, err

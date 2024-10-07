@@ -60,7 +60,7 @@ func (s *Source) Load() ([]*soft.Software, error) {
 			Type: FileSystemHelm,
 		}
 
-		err := versions.PopulateSoftwareDependencies(s.s3Api, s.log, topLevelSoftware, &chart, FileSystemHelm, s.filter)
+		err := versions.PopulateSoftwareDependencies(s.s3Api, s.log, s.cfg.RepositoriesAliases, topLevelSoftware, &chart, FileSystemHelm, s.filter)
 		if err != nil {
 			s.log.Error(fmt.Sprintf("Could not load %s chart as software, error: %s", chart.Name(), err))
 			continue

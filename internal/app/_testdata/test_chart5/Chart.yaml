@@ -1,0 +1,9 @@
+apiVersion: v2
+appVersion: v2.3.3
+description: A Helm chart for ArgoCD, a declarative, GitOps continuous delivery tool for Kubernetes.
+name: TestApp5
+version: 4.5.8
+dependencies:
+  - name: kube-prometheus-stack
+    version: 60.0.0
+    repository: '@my-alias'

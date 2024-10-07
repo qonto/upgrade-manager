@@ -87,12 +87,12 @@ func (s *Source) Load() ([]*soft.Software, error) {
 			s.log.Warn(fmt.Sprintf("Could not convert argo app %s to software: %s", app.Name, err))
 			continue
 		}
-		err = versions.PopulateTopLevelSoftware(s.s3Api, s.log, topLevelSoftware, app.RepoURL, app.Chart, s.versionFilter)
+		err = versions.PopulateTopLevelSoftware(s.s3Api, s.log, s.cfg.RepositoriesAliases, topLevelSoftware, app.RepoURL, app.Chart, s.versionFilter)
 		if err != nil {
 			s.log.Warn(fmt.Sprintf("Could not populate top level software %s: %s", app.Name, err))
 		}
 		if chart != nil {
-			err = versions.PopulateSoftwareDependencies(s.s3Api, s.log, topLevelSoftware, chart, ArgoHelm, s.versionFilter)
+			err = versions.PopulateSoftwareDependencies(s.s3Api, s.log, s.cfg.RepositoriesAliases, topLevelSoftware, chart, ArgoHelm, s.versionFilter)
 			if err != nil {
 				s.log.Error(fmt.Sprintf("Could not load %s chart as software, error: %s", chart.Name(), err))
 				continue

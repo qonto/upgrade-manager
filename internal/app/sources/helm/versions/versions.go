@@ -18,9 +18,9 @@ import (
 	"helm.sh/helm/v3/pkg/repo"
 )
 
-func PopulateTopLevelSoftware(s3Api aws.S3Api, log *slog.Logger, topLevelSoftware *soft.Software, repoURL string, chartName string, filter filters.Filter) error {
+func PopulateTopLevelSoftware(s3Api aws.S3Api, log *slog.Logger, repoAliases map[string]string, topLevelSoftware *soft.Software, repoURL string, chartName string, filter filters.Filter) error {
 	log.Debug(fmt.Sprintf("Populate top level software for chart %s repo backend %s", chartName, repoURL))
-	repoBackend, err := buildRepoBackend(repoURL, chartName, log, s3Api)
+	repoBackend, err := buildRepoBackend(repoAliases, repoURL, chartName, log, s3Api)
 	if err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func PopulateTopLevelSoftware(s3Api aws.S3Api, log *slog.Logger, topLevelSoftwar
 	return nil
 }
 
-func PopulateSoftwareDependencies(s3Api aws.S3Api, log *slog.Logger, topLevelSoftware *soft.Software, chart *chart.Chart, st soft.SoftwareType, filter filters.Filter) error {
+func PopulateSoftwareDependencies(s3Api aws.S3Api, log *slog.Logger, repoAliases map[string]string, topLevelSoftware *soft.Software, chart *chart.Chart, st soft.SoftwareType, filter filters.Filter) error {
 	softwareDependencies := []*soft.Software{}
 	for _, dependency := range chart.Metadata.Dependencies {
 		var depName string
@@ -52,7 +52,7 @@ func PopulateSoftwareDependencies(s3Api aws.S3Api, log *slog.Logger, topLevelSof
 		}
 		log.Debug(fmt.Sprintf("Populate dependency software for dep %s repo backend %s", depName, dependency.Repository))
 
-		depRepoBackend, err := buildRepoBackend(dependency.Repository, dependency.Name, log, s3Api)
+		depRepoBackend, err := buildRepoBackend(repoAliases, dependency.Repository, dependency.Name, log, s3Api)
 		if err != nil {
 			return err
 		}
